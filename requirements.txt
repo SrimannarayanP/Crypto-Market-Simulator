@@ -1,0 +1,6 @@
+threading
+subprocess
+sqlalchemy
+flask
+websockets
+flask_sqlalchemy
