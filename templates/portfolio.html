@@ -1,0 +1,74 @@
+<!-- portfolio.html -->
+
+
+<!DOCTYPE html>
+
+<html lang = 'en'>
+
+    <head>
+        <meta charset = 'UTF-8'>
+        <meta name = 'viewport' content = "width = device-width, initial scale = 1.0">
+
+        <title>Portfolio</title>
+
+        <link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'>
+
+        <style>
+            body {
+                background-color : #f0f2f5;
+            }
+
+            .container {
+                margin-top : 50px;
+            }
+
+            table {
+                font-size : 0.9em;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class = 'container'>
+            <h2 class = 'text-center'>Portfolio</h2>
+
+            <table class = "table table-striped table-bordered" id = 'portfolioTable'>
+                <thead class = 'thead-dark'>
+                    <tr>
+                        <th>Asset</th>
+                        <th>Quantity</th>
+                    </tr>
+                </thead>
+
+                <tbody id = 'portfolioBody'>
+
+                </tbody>
+            </table>
+        </div>
+
+        <script src = 'https://code.jquery.com/jquery-3.5.1.min.js'></script>
+
+        <script>
+            function loadPortfolio() {
+                $.ajax({
+                    url : '/portfolio_data',
+                    type : 'GET',
+                    success: function(data) {
+                        $('#portfolioBody').empty();
+
+                        data.forEach(function(item) {
+                            $('#portfolioBody').append(`<tr><td>${item.asset}</td><td>${item.quantity}</td></tr>`)
+                        });
+                    }
+                });
+            }
+
+            $(document).ready(function () {
+                loadPortfolio();
+
+                setInterval(loadPortfolio, 10000);
+            });
+        </script>
+    </body>
+
+</html>
