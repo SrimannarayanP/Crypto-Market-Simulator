@@ -1,0 +1,99 @@
+<!-- graph_display.html -->
+
+
+<!DOCTYPE html> <!-- Tells the browser which version of HTML is being used (HTML5) -->
+
+<html lang = 'en'> <!-- Specifies which language is the entire code in (en - English) -->
+    
+    <head> <!-- Contains document-related info. that isn't directly displayed -->
+        <meta charset = 'UTF-8'> <!-- Makes it possible to use emojis & characters that aren't available in the ASCII charset -->
+        <meta name = 'viewport' content = "width = device-width, initial-scale = 1.0"> <!-- Makes the webpage responsive by setting viewport width to device width & initial zoom to 1 -->
+
+        <!-- Viewport width is being used here as the width of screens varies from device to device. If the width of the webpage was fixed, then viewing this webpage on other devices would alter the positioning of other elements. Basically it is a relative width instead of a fixed 1 -->
+
+        <title>Real-time Cryptocurrency Charts</title>
+
+        <!-- CSS Styling part -->
+        <!-- .container creates a centered container that takes up 80% of the the page width leaving some top padding -->
+
+        <style>
+            body {
+                font-family : Arial, sans-serif;
+                background-color: #f0f2f5;
+                margin : 0;
+                padding : 0;
+            }
+
+            .container {
+                width : 80%;
+                margin : 0 auto;
+                padding-top : 20px;
+            }
+
+            h1 {
+                text-align : center;
+                color : #333;
+            }
+
+            .crypto-list {
+                margin : 20px 0;
+                list-style : none;
+                padding : 0;
+                text-align : center;
+            }
+
+            .crypto-list li{
+                margin : 10px 0;
+                font-size : 14px;
+                color : #555;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class = 'container'>
+            <h1>Cryptocurrency Charts</h1>
+
+            <ul class = "crypto-list">
+                {% for crypto in cryptocurrencies %} <!-- Loops through a cryptocurrency list -->
+
+                <!-- Basically using a template over here. Like how we have templates for sending multiple emails with the same content to diff. people, this does the exact same thing except this is for webpages -->
+                <!-- This is being used here as every cryptocurrency needs its own chart, every chart needs its unique ID & own symbol -->
+                <!-- Without this template stuff, we'd have to manually update each & every value & display the charts -->
+                <!-- Instead we've maintained a list of cryptocurrencies in our Python code & the template automatically creates all the necessary HTML structure for each 1 -->
+
+                    <li>{{crypto.name}} ({{crypto.symbol}})</li>
+
+                    <div class = 'tradingview-widget-container'>
+                        <div id = 'tradingview_{{crypto.symbol}}'></div>
+                        <!-- Creates containers for the TradingView chart widget with unique IDs for each cryptocurrency -->
+
+                        <script type = 'text/javascript' src = 'https://s3.tradingview.com/tv.js'></script>
+                        <!-- Loads the TradingView JS library -->
+
+                        <script type = 'text/javascript'>
+                            new TradingView.widget({
+                                'width' : 980,
+                                'height' : 610,
+                                'symbol' : 'BINANCE:{{crypto.symbol}}',
+                                'interval' : 'D',
+                                'timezone' : 'Etc/UTC',
+                                'theme' : 'dark',
+                                'style' : '1',
+                                'locale' : 'en',
+                                'toolbar_bg' : '#f1f3f6',
+                                'enable_publishing' : false,
+                                'allow_symbol_change' : true,
+                                'container_id' : 'tradingview_{{crypto.symbol}}'
+                            });
+                        </script>
+                        <!-- New TradingView chart widget is created with all the specific settings -->
+                        <!-- 'enable_publishing' : False = Doesn't allow users to save their chart layouts, annotations & share their analysis. However, users can use the diff. indicators, view prices, draw on the chart for their own analysis etc. Just change value to True if you want this enabled -->
+                    </div>
+
+                {% endfor %} <!-- Closes the template loop -->
+            </ul>
+        </div>
+    </body>
+
+</html>
